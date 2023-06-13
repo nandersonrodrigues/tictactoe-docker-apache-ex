@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Jogo da velha</title>
+    <style>
+      .board {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+        margin-bottom: 20px;
+      }
+      
+      .cell {
+        padding: 20px;
+        background-color: #eee;
+        text-align: center;
+        font-size: 2em;
+        cursor: pointer;
+      }
+      
+      .cell:hover {
+        background-color: #ddd;
+      }
+      
+      .x {
+        color: red;
+      }
+      
+      .o {
+        color: blue;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Jogo da velha</h1>
+    <p>Clique para por o 'X' e o 'O'</p>
+    
+    <div class="board">
+      <div class="cell"></div>
+      <div class="cell"></div>
+      <div class="cell"></div>
+      <div class="cell"></div>
+      <div class="cell"></div>
+      <div class="cell"></div>
+      <div class="cell"></div>
+      <div class="cell"></div>
+      <div class="cell"></div>
+    </div>
+    
+    <script>
+     
+        const cells = document.querySelectorAll('.cell');
+        let currentPlayer = 'X';
+        let moves = 0;
+        let winningMoves = [
+            ['0', '1', '2'],
+            ['3', '4', '5'],
+            ['6', '7', '8'],
+            ['0', '3', '6'],
+            ['1', '4', '7'],
+            ['2', '5', '8'],
+            ['0', '4', '8'],
+            ['2', '4', '6']
+        ];
+
+        cells.forEach(cell => {
+            cell.addEventListener('click', () => {
+
+                if (!cell.textContent) {
+                    cell.textContent = currentPlayer;
+                    cell.classList.add(currentPlayer.toLowerCase());
+                    moves++;
+                
+                    // Check if the current player wins
+                    let won = false;
+                    for (let i = 0; i < winningMoves.length; i++) {
+                        let [a, b, c] = winningMoves[i];
+                        if (
+                        cells[a].textContent === currentPlayer &&
+                        cells[b].textContent === currentPlayer &&
+                        cells[c].textContent === currentPlayer
+                        ) {
+                            won = true;
+                            break;
+                        }
+                    }
+                
+                    // Display win or draw alert
+                    if (won) {
+                        alert(`${currentPlayer} Venceu!`);
+                        resetGame();
+                    } else if (moves === cells.length) {
+                        alert(`Deu velha!`);
+                        resetGame();
+                    } else {
+                        currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+                    }
+                }
+            });
+        });
+
+        function resetGame() {
+            cells.forEach(cell => {
+                cell.textContent = '';
+                cell.classList.remove('x', 'o');
+            });
+            currentPlayer = 'X';
+            moves = 0;
+        }
+    </script>
+  </body>
+</html>
